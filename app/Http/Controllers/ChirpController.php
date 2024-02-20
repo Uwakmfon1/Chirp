@@ -6,8 +6,7 @@ use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\View\View;
 use App\Models\Chirp;
-
-
+use Symfony\Component\HttpFoundation\Test\Constraint\ResponseIsRedirected;
 
 class ChirpController extends Controller
 {
@@ -66,8 +65,12 @@ class ChirpController extends Controller
         return redirect(route('chirps.index'));
     }
 
-    public function destroy(Chirp $chirp)
+    public function destroy(Chirp $chirp):RedirectResponse
     {
+        $this->authorize('delete',$chirp);
 
+        $chirp->delete();
+        
+       return redirect(route('chirps.index'));
     }
 }
